@@ -28,11 +28,11 @@ return(
 
 export async function getStaticProps() {
   const response = await fetch("https://jsonplaceholder.typicode.com/users")
-  const posts = await response.json()
+  const users = await response.json()
 
   return {
     props: {
-      posts
+      users
     }
   }
 }

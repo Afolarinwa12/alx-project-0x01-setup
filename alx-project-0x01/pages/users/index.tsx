@@ -1,38 +1,52 @@
+import UserCard from "@/components/common/UserCard";
+import UserModal from "@/components/common/UserModal";
+import Header from "@/components/layout/Header";
+import { UserData, UserProps } from "@/interfaces";
+import { useState } from "react";
 
-import UserCard from '@/components/common/UserCard'; // Import the UserCard component
-import Header from '@/components/layout/Header'; // Assuming you have a Header component
-import { UserProps } from '@/interfaces'; // Import the UserProps interface
+const Users: React.FC<UserProps[]> = ({ users}) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
 
-const Users: React.FC = ({ users }) => {
-      console.log(users)
-return(
-    <div className="flex flex-col min-h-screen bg-gray-50"> {/* Use min-h-screen for full height */}
-      <Header /> {/* Your header component */}
-      <main className="p-4 md:p-8 flex-grow"> {/* flex-grow to make main take available space */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-extrabold text-gray-900">Our Users</h1>
-          <button className="bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 px-6 rounded-full shadow-md transition-colors duration-300">
-            Add User
-          </button>
+
+  const handleAddPost = (newUser: UserData) => {
+    setUser({ ...newUser, id: users.length + 1 });
+  };
+
+
+  return (
+    <div className="flex flex-col h-screen">
+      <Header />
+      <main className="p-4">
+        <div className="flex justify-between">
+          <h1 className=" text-2xl font-semibold">Post Content</h1>
+          <button onClick={() => setModalOpen(true)}
+            className="bg-blue-700 px-4 py-2 rounded-full text-white">Add Post</button>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {users?.map((user: UserProps) => (
-            <UserCard key={user.id} {...user} /> // Pass all user props using spread operator
-          ))}
+        <div className="grid grid-cols-3 gap-2 ">
+          {
+            users?.map(({ title, body, userId, id }:UserProps, key: number) => (
+              <UserCard title={title} body={body} userId={userId} id={id} key={key} />
+            ))
+          }
         </div>
       </main>
-    </div>
-)
+
+      {isModalOpen && (
+        <UserModal onClose={() => setModalOpen(false)} onSubmit={handleAddPost} />
+      )}
+    </div>//This allows the user application to toggle the state of your modal.
+  )
 }
 
+
 export async function getStaticProps() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users")
-  const users = await response.json()
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts")
+  const Users = await response.json()
 
   return {
     props: {
-      users
+    Users
     }
   }
 }

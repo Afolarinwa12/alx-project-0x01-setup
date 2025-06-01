@@ -35,7 +35,7 @@ const Posts: React.FC<PostProps[]> = ({ posts }) => {
       {isModalOpen && (
         <PostModal onClose={() => setModalOpen(false)} onSubmit={handleAddPost} />
       )}
-    </div>//This allows the user application to toggle the state of your modal.
+    </div>
   )
 }
 
